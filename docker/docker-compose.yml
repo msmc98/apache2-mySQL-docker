@@ -1,0 +1,32 @@
+version: "3"
+services:
+  miservicio_mysql:
+    image: mysql:5.7
+    environment:
+      - MYSQL_DATABASE=nombre
+      - MYSQL_ROOT_PASSWORD=claveroot
+      - MYSQL_USER=miusuario
+      - MYSQL_PASSWORD=mipassword
+    volumes:
+      # Montamos un volumen para MySQL para no perder los datos de bd
+      - ./volumenes/mysql:/var/lib/mysql
+    expose:
+      - 3306
+    ports:
+      - 3306:3306
+   
+  miservicio_php:
+    container_name: miservicio_php
+    tty: true
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    # volumes:
+    #   # Montamos nuestra web desde fuera en el directorio web del contenedor
+    #   - ./volumenes/apache2:/var/www/html
+    expose:
+      - 8080
+    ports:
+      - 8080:80
+    links: 
+      - miservicio_mysql
